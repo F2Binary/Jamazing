@@ -1,2 +1,2 @@
 # Jamazing
-"Perfect" maze generation and solver using Java
+"Perfect" maze generator and solver using Java

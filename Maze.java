@@ -1,11 +1,20 @@
+import java.beans.EventHandler;
+
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 public class Maze extends Application {
     public static void main(String[] args) {
@@ -77,11 +86,47 @@ public class Maze extends Application {
 //------------------------------------- All 4 Box Methods End --------------------------------------------//
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Maze Generator"); // window title
+        primaryStage.setTitle("Jamazing"); // window title
         primaryStage.show(); //spawning window
         primaryStage.getIcons().add(new Image(Maze.class.getResourceAsStream("Icon/m-icon-png-2.png"))); // setting app icon
         primaryStage.setHeight(500);
         primaryStage.setWidth(500);
+
+
+
+
+        ///*
+        int WindowSize = 500; // Size of the entire application is static so I don't have to worry about resizing. 
+        
+        Group group = new Group(); // Main group 
+        VBox vbox = new VBox(); // Main Vbox
+        HBox hbox = new HBox(); //top Hbox
+        GridPane Mazegrid = new GridPane();// main grid
+
+        // main button
+        Button generateButton = new Button("Generate Maze");
+
+        //text field for button
+        TextField MazeSizeUI = new TextField();
+        MazeSizeUI.setPromptText("Square Size ex \"5 x 5\" ");
+        MazeSizeUI.setAlignment(Pos.CENTER);
+        hbox.getChildren().addAll(MazeSizeUI, generateButton);
+        //populating grid
+        
+        generateButton.setOnMouseClicked((new javafx.event.EventHandler<MouseEvent>() { 
+            public void handle(MouseEvent event) { 
+               Mazegrid.getChildren().clear(); 
+               int i = Integer.parseInt(MazeSizeUI.getText());
+               if(MazeSizeUI.getText()!=null && !MazeSizeUI.getText().isEmpty()){
+                   AddCell(Mazegrid, i);
+                }
+            } 
+         }));
+        
+
+        vbox.getChildren().addAll(hbox, Mazegrid);
+        group.getChildren().addAll(vbox); // Adding everything to main group before setting the scene
+
 
         // setting up a box
         int size = 10; // Size of Maze
@@ -100,7 +145,11 @@ public class Maze extends Application {
         //-------------------------------------------------------
 
         GridPane MainMaze = new GridPane();
-        MainMaze.setPadding(new Insets(10));
+        // Moving GridPane Down
+        Translate GridMove = new Translate();
+        GridMove.setY(30);
+        MainMaze.getTransforms().add(GridMove);
+        MainMaze.setPadding(new Insets(0));
 
         //populating GridPane
         for(j = 0; j<size; j++){
@@ -111,9 +160,8 @@ public class Maze extends Application {
         }
         j=0;
         //--------------------------------------------------------
-
-        Scene scene = new Scene(MainMaze);
-
-        primaryStage.setScene(scene); //setting our main scene
+        group.getChildren().add(MainMaze);
+        Scene Altscene = new Scene(group);
+        primaryStage.setScene(Altscene); //setting our main scene
     }
 }

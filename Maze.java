@@ -1,28 +1,12 @@
 import javafx.application.Application;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
- 
 public class Maze extends Application {
     public static void main(String[] args) {
         launch(args);
@@ -39,47 +23,97 @@ public class Maze extends Application {
             celly++;
         }
     }
-
+    //------------------------------------- All 4 Box Methods Start ---------------------------------------------//
+    public Group DrawBox_Full(int size){
+        double xCoord = 0;
+        double yCoord = 0;
+        Line lineTop = new Line(xCoord     ,      yCoord     ,      xCoord+size,      yCoord     );
+        Line lineR   = new Line(xCoord+size,      yCoord     ,      xCoord+size,      yCoord+size);
+        Line lineBot = new Line(xCoord+size,      yCoord+size,      xCoord     ,      yCoord+size);
+        Line lineL   = new Line(xCoord     ,      yCoord+size,      xCoord     ,      yCoord     );
+        Group box = new Group(lineBot, lineTop, lineL, lineR);
+        return box;
+    }
+    public Group DrawBox_NoTop(int size){
+        double xCoord = 0;
+        double yCoord = 0;
+        //Line lineTop = new Line(xCoord     ,      yCoord     ,      xCoord+size,      yCoord     );
+        Line lineR   = new Line(xCoord+size,      yCoord     ,      xCoord+size,      yCoord+size);
+        Line lineBot = new Line(xCoord+size,      yCoord+size,      xCoord     ,      yCoord+size);
+        Line lineL   = new Line(xCoord     ,      yCoord+size,      xCoord     ,      yCoord     );
+        Group box = new Group(lineBot, lineL, lineR);
+        return box;
+    }
+    public Group DrawBox_NoRight(int size){
+        double xCoord = 0;
+        double yCoord = 0;
+        Line lineTop = new Line(xCoord     ,      yCoord     ,      xCoord+size,      yCoord     );
+        //Line lineR   = new Line(xCoord+size,      yCoord     ,      xCoord+size,      yCoord+size);
+        Line lineBot = new Line(xCoord+size,      yCoord+size,      xCoord     ,      yCoord+size);
+        Line lineL   = new Line(xCoord     ,      yCoord+size,      xCoord     ,      yCoord     );
+        Group box = new Group(lineBot, lineTop, lineL);
+        return box;
+    }
+    public Group DrawBox_NoBot(int size){
+        double xCoord = 0;
+        double yCoord = 0;
+        Line lineTop = new Line(xCoord     ,      yCoord     ,      xCoord+size,      yCoord     );
+        Line lineR   = new Line(xCoord+size,      yCoord     ,      xCoord+size,      yCoord+size);
+        //Line lineBot = new Line(xCoord+size,      yCoord+size,      xCoord     ,      yCoord+size);
+        Line lineL   = new Line(xCoord     ,      yCoord+size,      xCoord     ,      yCoord     );
+        Group box = new Group(lineTop, lineL, lineR);
+        return box;
+    }
+    public Group DrawBox_NoLeft(int size){
+        double xCoord = 0;
+        double yCoord = 0;
+        Line lineTop = new Line(xCoord     ,      yCoord     ,      xCoord+size,      yCoord     );
+        Line lineR   = new Line(xCoord+size,      yCoord     ,      xCoord+size,      yCoord+size);
+        Line lineBot = new Line(xCoord+size,      yCoord+size,      xCoord     ,      yCoord+size);
+        //Line lineL   = new Line(xCoord     ,      yCoord+size,      xCoord     ,      yCoord     );
+        Group box = new Group(lineBot, lineTop, lineR);
+        return box;
+    }
+//------------------------------------- All 4 Box Methods End --------------------------------------------//
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Jamazing");
-        int WindowSize = 500; // Size of the entire application is static so I don't have to worry about resizing. 
-        
-        Group group = new Group(); // Main group 
-        VBox vbox = new VBox(); // Main Vbox
-        HBox hbox = new HBox(); //top Hbox
-        GridPane Mazegrid = new GridPane();// main grid
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Maze Generator"); // window title
+        primaryStage.show(); //spawning window
+        primaryStage.getIcons().add(new Image(Maze.class.getResourceAsStream("Icon/m-icon-png-2.png"))); // setting app icon
+        primaryStage.setHeight(500);
+        primaryStage.setWidth(500);
 
-        // main button
-        Button generateButton = new Button("Generate Maze");
+        // setting up a box
+        int size = 10; // Size of Maze
+        int CellSize = 40;
+        int i = 0;
+        int j = 0;
 
-        //text field for button
-        TextField MazeSizeUI = new TextField();
-        MazeSizeUI.setPromptText("Square Size ex \"5 x 5\" ");
-        MazeSizeUI.setAlignment(Pos.CENTER);
-        hbox.getChildren().addAll(MazeSizeUI, generateButton);
-        //populating grid
-        generateButton.setOnMouseClicked((new EventHandler<MouseEvent>() { 
-            public void handle(MouseEvent event) { 
-               Mazegrid.getChildren().clear(); 
-               int i = Integer.parseInt(MazeSizeUI.getText());
-               if(MazeSizeUI.getText()!=null && !MazeSizeUI.getText().isEmpty()){
-                   AddCell(Mazegrid, i);
-                }
-            } 
-         }));
+        // populating Array with Full Boxes;
+        Group[][] GroupGrid = new Group[size][size];
+        for(j = 0; j<size; j++){
+            for(i = 0; i<size; i++){
+                GroupGrid[i][j] = DrawBox_Full(CellSize);
+            }
+            i = 0;
+        }
+        //-------------------------------------------------------
 
-        vbox.getChildren().addAll(hbox, Mazegrid);
-        group.getChildren().addAll(vbox); // Adding everything to main group before setting the scene
-        Scene scene = new Scene(group, WindowSize, WindowSize);
-        primaryStage.getIcons().add(new Image(Maze.class.getResourceAsStream("/Icon/m-icon-png-2.png")));
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        primaryStage.setMaxWidth(WindowSize);
-        primaryStage.setMaxHeight(WindowSize);
-        primaryStage.setMinWidth(WindowSize);
-        primaryStage.setMinHeight(WindowSize);
+        GridPane MainMaze = new GridPane();
+        MainMaze.setPadding(new Insets(10));
 
-        hbox.setLayoutX(250 - generateButton.getWidth()/2);
+        //populating GridPane
+        for(j = 0; j<size; j++){
+            for(i = 0; i<size; i++){
+                MainMaze.add(GroupGrid[i][j], j, i);
+            }
+            i = 0;
+        }
+        j=0;
+        //--------------------------------------------------------
+
+        Scene scene = new Scene(MainMaze);
+
+        primaryStage.setScene(scene); //setting our main scene
     }
 }

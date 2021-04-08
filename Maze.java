@@ -1,5 +1,4 @@
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,7 +12,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 public class Maze extends Application {
     public static void main(String[] args) {
@@ -171,8 +169,9 @@ public class Maze extends Application {
                 j=0;
             }
             else if (!IsInt(MazeSizeUI.getText())){
-                Alert eAlert = new Alert(AlertType.CONFIRMATION);
-                eAlert.setContentText("A NUMBER PLS STOOPID");
+                Alert eAlert = new Alert(AlertType.ERROR);
+                eAlert.setContentText("A number please");
+                eAlert.setTitle("Error: You are stupid.");
                 eAlert.show();
             }
             } 

@@ -27,7 +27,7 @@ public class Maze extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    public void AddCell(GridPane grid, int size, Button button){
+    public void AddCell(GridPane grid, int size){
         int cellx = 0;
         int celly = 0;
         while(cellx < size && celly < size){
